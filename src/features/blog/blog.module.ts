@@ -2,6 +2,7 @@ import { AttachmentModule } from '@features/attachment/attachment.module';
 import { CreateBlogCommandHandler } from '@features/blog/commands/create-blog/create-blog.command-handler';
 import { PatchUpdateBlogCommandHandler } from '@features/blog/commands/patch-update-blog/patch-update-blog.command-handler';
 import { BlogController } from '@features/blog/controllers/blog.controller';
+import { BlogUserConnectionDisconnectDomainEventListener } from '@features/blog/domain/events/listeners/blog-user-connection-disconnect.domain-event-listener';
 import { BlogMapper } from '@features/blog/mappers/blog.mapper';
 import { FindOneBlogByUserIdQueryHandler } from '@features/blog/queries/find-one-blog-by-user-id/find-one-blog-by-user-id.query-handler';
 import { BlogRepository } from '@features/blog/repositories/blog.repository';
@@ -26,6 +27,10 @@ const repositories: Provider[] = [
   { provide: BLOG_REPOSITORY_DI_TOKEN, useClass: BlogRepository },
 ];
 
+const domainEventListeners: Provider[] = [
+  BlogUserConnectionDisconnectDomainEventListener,
+];
+
 @Module({
   imports: [UserModule, NestjsFormDataModule, AttachmentModule, S3Module],
   controllers: [...controllers],
@@ -34,6 +39,7 @@ const repositories: Provider[] = [
     ...commandHandlers,
     ...repositories,
     ...queryHandlers,
+    ...domainEventListeners,
   ],
   exports: [...repositories, ...mappers],
 })

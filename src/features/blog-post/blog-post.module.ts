@@ -9,6 +9,7 @@ import { CreateBlogPostCommandHandler } from '@features/blog-post/commands/creat
 import { DeleteBlogPostCommandHandler } from '@features/blog-post/commands/delete-blog-post/delete-blog-post.command-handler';
 import { PatchUpdateBlogPostCommandHandler } from '@features/blog-post/commands/patch-update-blog-post/patch-update-blog-post.command-handler';
 import { BlogPostController } from '@features/blog-post/controllers/blog-post.controller';
+import { BlogPostBlogDeletedDomainEventHandler } from '@features/blog-post/application/event-handlers/blog-post-blog-deleted.domain-event-handler';
 import { BlogPostMapper } from '@features/blog-post/mappers/blog-post.mapper';
 import { FindBlogPostsFromBlogQueryHandler } from '@features/blog-post/queries/find-blog-posts-from-blog/find-blog-posts-from-blog.query-handler';
 import { FindOneBlogPostQueryHandler } from '@features/blog-post/queries/find-one-blog-post/find-one-blog-post.query-handler';
@@ -41,6 +42,8 @@ const queryHandlers: Provider[] = [
   FindPublicBlogPostsQueryHandler,
 ];
 
+const eventHandlers: Provider[] = [BlogPostBlogDeletedDomainEventHandler];
+
 const repositories: Provider[] = [
   { provide: BLOG_POST_REPOSITORY_DI_TOKEN, useClass: BlogPostRepository },
   {
@@ -61,6 +64,7 @@ const repositories: Provider[] = [
     ...commandHandlers,
     ...queryHandlers,
     ...repositories,
+    ...eventHandlers,
   ],
 })
 export class BlogPostModule {}
